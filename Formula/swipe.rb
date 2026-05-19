@@ -1,51 +1,47 @@
-# This formula is a placeholder until the first release of
-# swipe-merchants-dev is tagged. To activate it:
+# Build-from-source formula. To activate on the first release:
 #
-#   1. Tag and release `BML-Digital/swipe-merchants-dev` so goreleaser
-#      produces the per-platform archives + checksums.txt.
-#   2. Update `version` below to the released version (no leading `v`).
-#   3. Replace every `0000...` sha256 with the matching value from
-#      `swipe_<version>_checksums.txt`.
+#   1. Tag and push v0.1.0 (or later) on `BML-Digital/swipe-merchants-dev`.
+#   2. Compute the source-tarball checksum:
+#        curl -sL https://github.com/BML-Digital/swipe-merchants-dev/archive/refs/tags/v0.1.0.tar.gz | shasum -a 256
+#   3. Update `url` (replace v0.1.0) and `sha256` below with that value.
 #   4. If the source repo's LICENSE differs from MIT, update `license`
 #      to the matching SPDX identifier (https://spdx.org/licenses/).
-#   5. `brew audit --strict --online Formula/swipe.rb`.
+#   5. `brew audit --strict --online Formula/swipe.rb` should pass.
 #   6. Commit + push to `main`.
+#
+# Until then, `brew install BML-Digital/tap/swipe` will fail because
+# v0.1.0 doesn't yet exist on the source repo. `brew install
+# --head BML-Digital/tap/swipe` will build from `main`.
 
 class Swipe < Formula
   desc "CLI for merchants integrating with the Swipe payment platform"
   homepage "https://github.com/BML-Digital/swipe-merchants-dev"
-  version "0.0.0"
+  url "https://github.com/BML-Digital/swipe-merchants-dev/archive/refs/tags/v0.1.0.tar.gz"
+  sha256 "0000000000000000000000000000000000000000000000000000000000000000"
   license "MIT" # TODO: confirm against LICENSE in source repo
+  head "https://github.com/BML-Digital/swipe-merchants-dev.git", branch: "main"
+
+  depends_on "go" => :build
 
   livecheck do
     url :stable
     strategy :github_latest
   end
 
-  on_macos do
-    on_arm do
-      url "https://github.com/BML-Digital/swipe-merchants-dev/releases/download/v#{version}/swipe_#{version}_darwin_arm64.tar.gz"
-      sha256 "0000000000000000000000000000000000000000000000000000000000000000"
-    end
-    on_intel do
-      url "https://github.com/BML-Digital/swipe-merchants-dev/releases/download/v#{version}/swipe_#{version}_darwin_amd64.tar.gz"
-      sha256 "0000000000000000000000000000000000000000000000000000000000000000"
-    end
-  end
-
-  on_linux do
-    on_arm do
-      url "https://github.com/BML-Digital/swipe-merchants-dev/releases/download/v#{version}/swipe_#{version}_linux_arm64.tar.gz"
-      sha256 "0000000000000000000000000000000000000000000000000000000000000000"
-    end
-    on_intel do
-      url "https://github.com/BML-Digital/swipe-merchants-dev/releases/download/v#{version}/swipe_#{version}_linux_amd64.tar.gz"
-      sha256 "0000000000000000000000000000000000000000000000000000000000000000"
-    end
-  end
-
   def install
-    bin.install "swipe"
+    spec_version = (buildpath/"spec/.spec-version").read.strip
+    cd "cli" do
+      ldflags = %W[
+        -s -w
+        -X github.com/BML-Digital/swipe-merchants-dev/cli/internal/version.Version=#{version}
+        -X github.com/BML-Digital/swipe-merchants-dev/cli/internal/version.SpecVersion=#{spec_version}
+      ].join(" ")
+      system "go", "build",
+             "-trimpath",
+             "-ldflags", ldflags,
+             "-o", bin/"swipe",
+             "./cmd/swipe"
+    end
   end
 
   test do

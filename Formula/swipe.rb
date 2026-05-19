@@ -1,23 +1,8 @@
-# Build-from-source formula. To activate on the first release:
-#
-#   1. Tag and push v0.1.0 (or later) on `BML-Digital/swipe-merchants-dev`.
-#   2. Compute the source-tarball checksum:
-#        curl -sL https://github.com/BML-Digital/swipe-merchants-dev/archive/refs/tags/v0.1.0.tar.gz | shasum -a 256
-#   3. Update `url` (replace v0.1.0) and `sha256` below with that value.
-#   4. If the source repo's LICENSE differs from MIT, update `license`
-#      to the matching SPDX identifier (https://spdx.org/licenses/).
-#   5. `brew audit --strict --online Formula/swipe.rb` should pass.
-#   6. Commit + push to `main`.
-#
-# Until then, `brew install BML-Digital/tap/swipe` will fail because
-# v0.1.0 doesn't yet exist on the source repo. `brew install
-# --head BML-Digital/tap/swipe` will build from `main`.
-
 class Swipe < Formula
   desc "CLI for merchants integrating with the Swipe payment platform"
   homepage "https://github.com/BML-Digital/swipe-merchants-dev"
-  url "https://github.com/BML-Digital/swipe-merchants-dev/archive/refs/tags/v0.1.0.tar.gz"
-  sha256 "0000000000000000000000000000000000000000000000000000000000000000"
+  url "https://github.com/BML-Digital/swipe-merchants-dev/archive/refs/tags/v0.0.1.tar.gz"
+  sha256 "0019dfc4b32d63c1392aa264aed2253c1e0c2fb09216f8e2cc269bbfb8bb49b5"
   license "MIT" # TODO: confirm against LICENSE in source repo
   head "https://github.com/BML-Digital/swipe-merchants-dev.git", branch: "main"
 

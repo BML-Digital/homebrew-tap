@@ -2,7 +2,7 @@ class Swipe < Formula
   desc "CLI for merchants integrating with the Swipe payment platform"
   homepage "https://github.com/BML-Digital/swipe-merchants-dev"
   url "https://github.com/BML-Digital/swipe-merchants-dev/archive/refs/tags/v0.0.1.tar.gz"
-  sha256 "0019dfc4b32d63c1392aa264aed2253c1e0c2fb09216f8e2cc269bbfb8bb49b5"
+  sha256 "9f1713d1492c4ecf74ec6cf6da1055d98c62503625a02d52fa922f11cadb1c51"
   license "MIT" # TODO: confirm against LICENSE in source repo
   head "https://github.com/BML-Digital/swipe-merchants-dev.git", branch: "main"
 
